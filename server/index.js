@@ -1,7 +1,19 @@
-  const {Server} = require("socket.io")
+const { Server } = require("socket.io");
 
-  const io = new Server(8000);
+const io = new Server(8000, {
+  cors: true,
+});
 
-  io.on("connection", (socket) => {
-    console.log(`Socket Connected`, socker.id);
-  });
+const emailToSocketIDMap = new Map();
+const socketIDToEmailMap = new Map();
+
+io.on("connection", (socket) => {
+  console.log(`Socket Connected`, socket.id);
+
+  socket.on('room:join', data => {
+    const {email, room} = data;
+    emailToSocketIDMap.set(email, socket.id);
+    socketIDToEmailMap.set(socket.id, email);
+    io.to(socket.id).emit('room:join', data);
+  })
+});
