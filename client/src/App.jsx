@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import LobbyScreen from "./screens/Lobby";
+import RoomPage from "./screens/Room";
 import "./App.css";
 
 function App() {
@@ -7,6 +8,7 @@ function App() {
     <div>
       <Routes>
         <Route path = "/" element = {<LobbyScreen />} />
+        <Route path = "/room/:roomId" element = {<RoomPage />} />
       </Routes>
     </div>
   );

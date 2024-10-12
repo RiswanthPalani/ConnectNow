@@ -6,6 +6,7 @@ const LobbyScreen = () => {
   const [email, setEmail] = useState("");
   const [room, setRoom] = useState("");
 
+  const navigate = useNavigate();
   const socket = useSocket();
   // console.log(socket);
 
@@ -17,16 +18,19 @@ const LobbyScreen = () => {
     [email, room, socket]
   );
 
-  const handleRoomJoin = useCallback((data) => {
-    const {email, room} = data;
-    console.log({email, room});
-  }, []);
+  const handleRoomJoin = useCallback(
+    (data) => {
+      const { email, room } = data;
+      navigate(`./room/${room}`);
+    },
+    [navigate]
+  );
 
   useEffect(() => {
-    socket.on('room:join', handleRoomJoin);
+    socket.on("room:join", handleRoomJoin);
     return () => {
-      socket.off('room:join', handleRoomJoin);
-    }
+      socket.off("room:join", handleRoomJoin);
+    };
   }, [socket]);
 
   return (
