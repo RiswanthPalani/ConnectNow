@@ -9,7 +9,18 @@ export const useSocket = () => {
 };
 
 export const SocketProvider = (props) => {
-  const socket = useMemo(() => io("localhost:8000"), []);
+  const socket = useMemo(
+    () => io("https://connectnow-o3t8.onrender.com"),
+    []
+  );
+
+  socket.on("connect", () => {
+    console.log("Connected to Signalling server");
+  });
+
+  socket.on("connect_error", (error) => {
+    console.error("Signalling Server Connection Error:", error);
+  });
 
   return (
     <SocketContext.Provider value={socket}>
