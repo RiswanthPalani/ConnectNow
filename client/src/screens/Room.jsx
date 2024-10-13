@@ -3,6 +3,16 @@ import ReactPlayer from "react-player";
 import peer from "../service/peer";
 import { useSocket } from "../context/SocketProvider";
 
+// Import MUI components
+import {
+  Box,
+  Button,
+  Grid,
+  Typography,
+  Container,
+  Paper,
+} from "@mui/material";
+
 const RoomPage = () => {
   const socket = useSocket();
   const [remoteSocketId, setRemoteSocketId] = useState(null);
@@ -110,36 +120,62 @@ const RoomPage = () => {
   ]);
 
   return (
-    <div>
-      <h1>Room Page</h1>
-      <h4>{remoteSocketId ? "Connected" : "No one in room"}</h4>
-      {myStream && <button onClick={sendStreams}>Send Stream</button>}
-      {remoteSocketId && <button onClick={handleCallUser}>CALL</button>}
-      {myStream && (
-        <>
-          <h1>My Stream</h1>
-          <ReactPlayer
-            playing
-            muted
-            height="100px"
-            width="200px"
-            url={myStream}
-          />
-        </>
-      )}
-      {remoteStream && (
-        <>
-          <h1>Remote Stream</h1>
-          <ReactPlayer
-            playing
-            muted
-            height="100px"
-            width="200px"
-            url={remoteStream}
-          />
-        </>
-      )}
-    </div>
+    <Container maxWidth="md" sx={{ mt: 4 }}>
+      <Paper elevation={3} sx={{ padding: 4 }}>
+        <Typography variant="h4" component="h1" gutterBottom>
+          Room: {remoteSocketId ? "Connected" : "Waiting for others..."}
+        </Typography>
+
+        <Box sx={{ my: 2 }}>
+          {remoteSocketId && (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleCallUser}
+              sx={{ mr: 2 }}
+            >
+              Call
+            </Button>
+          )}
+          {myStream && (
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={sendStreams}
+            >
+              Send Stream
+            </Button>
+          )}
+        </Box>
+
+        <Grid container spacing={2}>
+          {myStream && (
+            <Grid item xs={12} sm={6}>
+              <Typography variant="h6">My Stream</Typography>
+              <ReactPlayer
+                playing
+                muted
+                height="100%"
+                width="100%"
+                url={myStream}
+              />
+            </Grid>
+          )}
+          {remoteStream && (
+            <Grid item xs={12} sm={6}>
+              <Typography variant="h6">Remote Stream</Typography>
+              <ReactPlayer
+                playing
+                muted
+                height="100%"
+                width="100%"
+                url={remoteStream}
+              />
+            </Grid>
+          )}
+        </Grid>
+      </Paper>
+    </Container>
   );
 };
 
