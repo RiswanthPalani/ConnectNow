@@ -11,6 +11,7 @@ export const useSocket = () => {
 export const SocketProvider = (props) => {
   const socket = useMemo(
     () => io("https://connectnow-o3t8.onrender.com"),
+    // () => io("localhost:8000"),
     []
   );
 

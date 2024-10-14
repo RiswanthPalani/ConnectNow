@@ -2,26 +2,34 @@ import React, { useEffect, useCallback, useState } from "react";
 import ReactPlayer from "react-player";
 import peer from "../service/peer";
 import { useSocket } from "../context/SocketProvider";
+import { Snackbar, Alert } from "@mui/material";
 
 // Import MUI components
-import {
-  Box,
-  Button,
-  Grid,
-  Typography,
-  Container,
-  Paper,
-} from "@mui/material";
+import { Box, Button, Grid, Typography, Container, Paper } from "@mui/material";
 
 const RoomPage = () => {
   const socket = useSocket();
   const [remoteSocketId, setRemoteSocketId] = useState(null);
   const [myStream, setMyStream] = useState();
   const [remoteStream, setRemoteStream] = useState();
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [isAudioMuted, setIsAudioMuted] = useState(false);
+  const [isVideoMuted, setIsVideoMuted] = useState(false);
+
+  const toggleAudio = () => {
+    myStream.getAudioTracks()[0].enabled = isAudioMuted;
+    setIsAudioMuted(!isAudioMuted);
+  };
+
+  const toggleVideo = () => {
+    myStream.getVideoTracks()[0].enabled = isVideoMuted;
+    setIsVideoMuted(!isVideoMuted);
+  };
 
   const handleUserJoined = useCallback(({ email, id }) => {
     console.log(`Email ${email} joined room`);
     setRemoteSocketId(id);
+    setSnackbarOpen(true); // Show snackbar
   }, []);
 
   const handleCallUser = useCallback(async () => {
@@ -44,7 +52,7 @@ const RoomPage = () => {
       });
       setMyStream(stream);
       const ans = await peer.getAnswer(offer);
-      socket.emit('call:accepted', { to: from, ans });
+      socket.emit("call:accepted", { to: from, ans });
     },
     [socket]
   );
@@ -138,11 +146,7 @@ const RoomPage = () => {
             </Button>
           )}
           {myStream && (
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={sendStreams}
-            >
+            <Button variant="contained" color="secondary" onClick={sendStreams}>
               Send Stream
             </Button>
           )}
@@ -174,7 +178,24 @@ const RoomPage = () => {
             </Grid>
           )}
         </Grid>
+        <Box sx={{ my: 2 }}>
+          <Button variant="contained" onClick={toggleAudio} sx={{ mr: 2 }}>
+            {isAudioMuted ? "Unmute Audio" : "Mute Audio"}
+          </Button>
+          <Button variant="contained" onClick={toggleVideo}>
+            {isVideoMuted ? "Start Video" : "Stop Video"}
+          </Button>
+        </Box>
       </Paper>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={() => setSnackbarOpen(false)}
+      >
+        <Alert onClose={() => setSnackbarOpen(false)} severity="info">
+          A user has joined the room.
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };
