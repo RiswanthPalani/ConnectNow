@@ -154,7 +154,7 @@ const RoomPage = () => {
               <Typography variant="h6">My Stream</Typography>
               <ReactPlayer
                 playing
-                muted
+                muted // Keep your own stream muted so the remote user doesn't hear your voice
                 height="100%"
                 width="100%"
                 url={myStream}
@@ -166,7 +166,7 @@ const RoomPage = () => {
               <Typography variant="h6">Remote Stream</Typography>
               <ReactPlayer
                 playing
-                muted
+                muted={false} // Do NOT mute the remote stream so you can hear their voice
                 height="100%"
                 width="100%"
                 url={remoteStream}
