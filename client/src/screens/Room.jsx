@@ -35,7 +35,9 @@ const RoomPage = () => {
   const handleCallUser = useCallback(async () => {
     const stream = await navigator.mediaDevices.getUserMedia({
       audio: true,
-      video: true,
+      video: {
+        facingMode: "user", // Or "environment" for the front-facing camera
+      },
     });
     const offer = await peer.getOffer();
     socket.emit("user:call", { to: remoteSocketId, offer });
@@ -162,6 +164,7 @@ const RoomPage = () => {
                 height="100%"
                 width="100%"
                 url={myStream}
+                style={{ transform: "scaleX(-1)" }} // Flip the local video
               />
             </Grid>
           )}
@@ -174,6 +177,7 @@ const RoomPage = () => {
                 height="100%"
                 width="100%"
                 url={remoteStream}
+                style={{ transform: "scaleX(-1)" }} // Flip the local video
               />
             </Grid>
           )}

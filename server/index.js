@@ -2,8 +2,8 @@ const { Server } = require("socket.io");
 
 const io = new Server(8000, {
   cors: {
-    origin: "https://connectnow7.vercel.app", // Allow only your frontend URL
-    // origin: "http://localhost:5173",
+    // origin: "https://connectnow7.vercel.app", // Allow only your frontend URL
+    origin: "http://localhost:5173",
     // methods: ["GET", "POST"],
     // credentials: true,
   },
